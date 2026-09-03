@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GYM">
+<meta name="theme-color" content="#101216">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23101216'/%3E%3Ctext x='90' y='108' font-size='50' font-family='-apple-system,Helvetica,sans-serif' font-weight='700' letter-spacing='2' fill='%235B8CFF' text-anchor='middle'%3EGYM%3C/text%3E%3C/svg%3E">
+<title>GYM</title>
+<style>
+:root{--bg:#101216;--panel:#181B21;--line:#262A33;--text:#EBEDF0;--mute:#868D9A;--soft:#C3C8D0;--accent:#5B8CFF;--ok:#3FA96B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Noto Sans HK",sans-serif;-webkit-font-smoothing:antialiased}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+#app{max-width:520px;margin:0 auto;padding:20px 18px 40px}
+h1{font-size:34px;font-weight:700;letter-spacing:-.02em;margin:0 0 4px}
+h2{font-size:19px;font-weight:600;margin:0}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+.eyebrow{color:var(--mute);font-size:14px;margin-bottom:6px}
+.sub{color:var(--mute);font-size:15px;margin-bottom:22px}
+.mute{color:var(--mute);font-size:14px}
+.mode{display:flex;gap:8px;margin-bottom:20px}
+.mode button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--mute);border-radius:11px;padding:12px 0;font-size:15px}
+.mode button.on{border-color:var(--accent);color:var(--text);font-weight:600}
+ul.preview{list-style:none;padding:0;margin:0 0 22px;border-top:1px solid var(--line)}
+ul.preview li{display:flex;justify-content:space-between;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line);font-size:16px;gap:12px}
+.target{color:var(--mute);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.primary{width:100%;background:var(--accent);color:#0B0E14;border:none;border-radius:12px;padding:17px 0;font-size:17px;font-weight:700}
+.ghost{width:100%;background:none;color:var(--mute);border:1px solid var(--line);border-radius:12px;padding:14px 0;font-size:15px;margin-top:20px}
+.back{background:none;border:none;color:var(--mute);font-size:15px;padding:0;margin-bottom:14px}
+.note-sm{color:var(--mute);font-size:13.5px;line-height:1.65;margin:14px 0 30px}
+.sec{font-size:15px;font-weight:600;color:var(--mute);margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chip{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 14px;display:flex;flex-direction:column;gap:3px}
+.chip.on{border-color:var(--accent)}
+.chip b{font-size:16px;font-weight:600;color:var(--text)}
+.chip span{color:var(--mute);font-size:12.5px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.ex{margin-bottom:30px}
+.exhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:4px}
+.hint{color:var(--mute);font-size:13.5px;margin-bottom:4px}
+.prev{color:var(--mute);font-size:13px;margin-bottom:8px;font-variant-numeric:tabular-nums}
+.howbtn{background:none;border:none;color:var(--accent);font-size:13.5px;padding:0;margin-bottom:10px}
+.coach{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:12px;font-size:14px;line-height:1.65;color:var(--soft)}
+.coach p{margin-bottom:9px}
+.coach p:last-child{margin-bottom:0}
+.coach b{color:var(--text);font-weight:600}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.rowhead{display:flex;gap:8px;align-items:center;color:var(--mute);font-size:12px;padding-bottom:6px}
+.idx{width:22px;text-align:center;color:var(--mute);font-size:14px;flex:0 0 22px}
+.cell{flex:1;min-width:0}
+input{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:13px 8px;font-size:17px;text-align:center;outline:none;font-variant-numeric:tabular-nums;font-family:inherit}
+input:focus{border-color:var(--accent)}
+.tick{width:52px;height:47px;flex:0 0 52px;background:var(--panel);border:1px solid var(--line);color:var(--mute);border-radius:10px;font-size:18px}
+.tick.on{background:var(--ok);border-color:var(--ok);color:#08130C}
+.stblock{border-top:1px solid var(--line);padding-top:22px;margin-bottom:26px}
+.st{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+.st div{flex:1}
+.st b{font-size:16px;font-weight:600;display:block;margin-bottom:4px}
+.st p{color:var(--mute);font-size:13.5px;line-height:1.6}
+.st button{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 13px;font-size:13.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rest{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:16px 22px calc(16px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto}
+.rest b{font-size:26px;font-variant-numeric:tabular-nums}
+.rest span{color:var(--mute);font-size:14px;flex:1}
+.rest button{background:none;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 16px;font-size:14px}
+.hist{margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.hline{display:flex;justify-content:space-between;gap:12px;margin:7px 0;font-size:14px}
+.hline span:last-child{color:var(--mute);font-variant-numeric:tabular-nums;text-align:right}
+.tag{font-size:12px;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ---------- 動作教學 ---------- */
+const C = {
+"坐姿上斜推胸機":{s:"椅高調到把手大約喺乳頭上少少嘅高度。坐低之後肩胛骨向後向下貼實椅背，唔好聳膊。",d:"手肘同身體約 45–60 度，唔好開到成個 T 字。推到頂留少少彎唔好鎖死。返嚟到胸口有拉扯感就停，唔好等重量撞到底。",b:"推出去嗰程呼氣，返嚟嗰程吸氣。返嚟慢啲，數兩秒。"},
+"坐姿平推胸機":{s:"椅高調到把手同胸骨中段水平。肩胛骨貼實椅背。",d:"手肘 45–60 度。推頂唔鎖死，返嚟控制住。全程胸口保持挺，唔好圓膊。",b:"推呼氣、返吸氣。"},
+"蝴蝶機夾胸":{s:"把手同膊頭同高。手肘微彎，呢個角度全程唔變。",d:"用手臂內側去夾，唔係用手掌握實。夾到中間停一秒，放返開嗰程數三秒，感受胸口拉扯。",b:"夾埋呼氣，打開吸氣。"},
+"高位繩索夾胸":{s:"滑輪調到高過膊頭。企成弓步，身體微微前傾。",d:"手肘微彎固定。由高向下向內夾到肚臍前面，夾實停一秒。",b:"夾埋呼氣，打開吸氣。"},
+"坐姿側平舉機":{s:"椅高調到機器嘅轉軸對正你膊頭關節。",d:"用手肘領住向上，唔好用手腕出力。升到手臂同膊頭平就夠，過高會變咗練斜方肌。落嗰程數兩秒，唔好跌返落去。",b:"升起呼氣，落返吸氣。呼吸保持順，唔好閉氣。"},
+"繩索單手側平舉":{s:"滑輪調到最低。側身企，用遠嗰隻手拉，繩索橫過身體前面。",d:"手肘微彎固定。慢慢升到同膊頭平，頂位停一秒。全程唔好借腰擺。",b:"升呼氣、落吸氣。"},
+"繩索三頭下壓":{s:"滑輪調高。手肘夾實身側，企定，身體微微前傾。",d:"淨係前臂郁，上臂全程唔好離開身側。壓到底手臂完全伸直停一停，返上嚟到前臂同地面平行。",b:"壓落去呼氣，返上嚟吸氣。"},
+"三頭伸展機":{s:"跟機器指示對正手肘位置，上臂貼實墊。",d:"淨係前臂郁。伸直停一秒，返嚟控制住。",b:"伸直呼氣，返嚟吸氣。"},
+"對握高位下拉":{s:"大腿墊調到夾實隻腳，坐低唔會彈起。用對握（掌心相對）手柄。",d:"胸口向上迎住把手，身體微微後傾。先沉低膊頭再拉，想像手肘拉向後褲袋。拉到鎖骨位置就夠，唔使拉到落胸。",b:"拉落嚟呼氣，放返上去吸氣。放上去嗰程慢，唔好任佢彈。"},
+"輔助引體上升":{s:"輔助重量由重試起（輔助愈重愈易）。膝頭跪穩踏板。",d:"起手前先沉膊。拉到下巴過棍，落到手臂差唔多直但唔好完全鬆晒。",b:"拉上去呼氣，落嚟吸氣。"},
+"反手高位下拉":{s:"反手握（掌心向自己），約肩寬。大腿墊夾實。",d:"手肘向後向下拉，拉到把手掂到鎖骨。反手會令二頭參與多啲，重量可以比對握重少少。",b:"拉呼氣、放吸氣。"},
+"坐姿划船機":{s:"胸墊調到胸口貼實，坐直，腳踩穩。",d:"挺胸，肩胛骨向後夾埋。手肘擦住身側過。唔好用腰前後擺，上身全程唔郁。",b:"拉埋嚟呼氣，放出去吸氣。"},
+"坐姿划船機（闊握）":{s:"用闊握或者橫棍，握位闊過膊頭。胸口貼實墊。",d:"手肘向外約 45 度拉，拉向肚臍上方。闊握練背嘅闊度多啲。",b:"拉呼氣、放吸氣。"},
+"蝴蝶機反向飛鳥":{s:"坐反轉，面向椅背，胸口貼實。把手同膊頭同高。",d:"手肘微彎固定。想像兩塊肩胛骨夾住一張紙。打開到手臂同膊頭一條線就夠，唔好過度後拉。",b:"打開呼氣，埋返嚟吸氣。"},
+"繩索面拉 Face Pull":{s:"滑輪調到略高過頭，用繩索。企穩，微微後傾。",d:"拉向額頭或者耳仔水平，手肘保持高過手腕。尾段將姆指向後轉（外旋），呢個轉係重點。",b:"拉埋嚟呼氣，放出去吸氣。"},
+"二頭彎舉機":{s:"椅高調到上臂完全貼實墊，腋下頂住上邊。",d:"上臂全程唔好離墊。舉到頂夾實一秒，落嚟數兩秒，落到手臂差唔多直。",b:"舉起呼氣，落返吸氣。"},
+"繩索二頭彎舉":{s:"滑輪調到最低。手肘夾住身側。",d:"上臂唔好向前擺。舉到頂停一秒，落嚟控制。",b:"舉呼氣、落吸氣。"},
+"坐姿肩推機":{s:"椅高調到把手大約同耳仔水平。背貼實椅背，唔好過度挺腰。",d:"推到頂留少少彎唔鎖死。落到手肘略低過膊頭就夠，唔好落得太深谷。",b:"推上去呼氣，落返吸氣。"},
+"腿舉機":{s:"腳掌與肩同寬，放喺踏板中間偏上。椅背角度調到舒服。",d:"落到大腿接近胸口，但一旦感覺到腰離開椅背（盤骨捲起）就即刻停，唔好再落。推頂膝頭留少少彎。腳跟全程唔好離板。",b:"推出去呼氣，落返嚟吸氣。"},
+"單腳腿舉":{s:"重量減一半以上。單腳放踏板正中，另一隻腳踩地下或者屈起。",d:"膝頭同腳尖同一方向，唔好向內塌。控制住落，慢過推。",b:"推呼氣、落吸氣。"},
+"坐姿腿後勾機":{s:"機器轉軸對正膝頭關節。大腿墊壓實，唔好郁到。",d:"勾到底停一秒，感受大腿後側收緊。放返嚟數兩三秒，唔好任佢彈。",b:"勾埋呼氣，放返吸氣。"},
+"腿屈伸機":{s:"轉軸對正膝頭。背貼實椅背，捉實兩邊扶手。",d:"踢直停一秒，膝頭唔好完全鎖死撞硬。落嚟慢，唔好用力甩上去。",b:"踢直呼氣，落返吸氣。"},
+"提踵機":{s:"前腳掌踩喺邊緣，腳跟懸空。",d:"落到腳跟低過踏板、小腿有拉扯感，升到最高踮盡停一秒。全幅度先有效。",b:"升起呼氣，落返吸氣。"},
+"器械舉腿":{s:"前臂放墊，背貼實靠板。",d:"用腹肌捲起盤骨向上，唔係淨係擺對腳。落嚟慢，腰唔好拱起離開靠板。",b:"舉起嗰程呼氣（用力吐），落返吸氣。"},
+"訓地舉腿":{s:"平躺，手掌放喺腰下面，感覺腰有冇離地。",d:"落腳落到腰快要離地就停，返上嚟。控制範圍比高度重要。",b:"舉起呼氣，落返吸氣。"}
+};
+
+/* ---------- 拉筋 ---------- */
+const ST = [
+ [{n:"單手扶牆開胸",h:"單手前臂貼牆，手肘略低過膊頭，身體向反方向轉。每邊 30 秒。",t:30},
+  {n:"三頭伸展",h:"舉高一隻手屈曲摸背脊，另一隻手將手肘向後推。每邊 20 秒。",t:20},
+  {n:"站立後仰",h:"雙手托住下背，挺胸輕輕向後拗，拉長腹肌。20 秒。",t:20}],
+ [{n:"推牆 L 字",h:"雙手貼牆（心口高度），腳向後退，屁股向後推，身體成 L 型，心口向下壓。30 秒。",t:30},
+  {n:"二頭伸展",h:"側身企，單手伸直掌心貼牆（低過膊頭），身體向反方向轉。每邊 20 秒。",t:20},
+  {n:"頸側斜方肌",h:"一隻手捉住背後褲袋，另一隻手輕扶頭頂側向對面，耳仔搵膊頭。每邊 20 秒。",t:20}],
+ [{n:"大腿前側",h:"企直扶牆，另一隻手向後捉住腳背拉向屁股，膝頭指向地下。每邊 30 秒。",t:30},
+  {n:"坐姿臀部（4 字）",h:"坐低將右腳眼放喺左膝上，挺胸上身向前傾。每邊 30 秒。",t:30},
+  {n:"小腿貼牆",h:"雙手扶牆，一隻腳向後伸直，腳跟踩實地下。每邊 20 秒。",t:20}],
+ [{n:"跨體膊頭伸展",h:"一隻手橫過胸前，另一隻手扣住手肘向身體壓。每邊 20 秒。",t:20},
+  {n:"頸側斜方肌",h:"手捉住背後褲袋，另一隻手扶頭側向對面。每邊 20 秒。",t:20},
+  {n:"門框開胸",h:"雙手前臂貼門框，身體向前踏一步。30 秒。",t:30}],
+ [{n:"推牆 L 字",h:"雙手貼牆，腳後退，屁股後推，心口向下壓。30 秒。",t:30},
+  {n:"胸椎轉體",h:"跪低單手放後腦，手肘向上轉開，眼跟住手肘。每邊 20 秒。",t:20},
+  {n:"頸側斜方肌",h:"手捉褲袋，另一手扶頭側向對面。每邊 20 秒。",t:20}],
+ [{n:"大腿前側",h:"扶牆，手捉腳背拉向屁股。每邊 30 秒。",t:30},
+  {n:"坐姿臀部（4 字）",h:"右腳眼放左膝上，上身前傾。每邊 30 秒。",t:30},
+  {n:"單手扶牆開胸",h:"前臂貼牆，手肘略低過膊頭，身體轉開。每邊 20 秒。",t:20}]
+];
+
+/* ---------- 訓練單元 ---------- */
+const UNITS = [
+ {n:"推",s:"上胸 · 側膊 · 三頭",ex:[
+   {v:["坐姿上斜推胸機","坐姿平推胸機"],sets:4,reps:"10-12"},
+   {v:["蝴蝶機夾胸","高位繩索夾胸"],sets:3,reps:"12-15"},
+   {v:["坐姿側平舉機","繩索單手側平舉"],sets:4,reps:"15"},
+   {v:["繩索三頭下壓","三頭伸展機"],sets:3,reps:"12"}]},
+ {n:"拉",s:"闊背 · 後膊 · 二頭",ex:[
+   {v:["對握高位下拉","輔助引體上升"],sets:4,reps:"10"},
+   {v:["坐姿划船機","坐姿划船機（闊握）"],sets:3,reps:"12"},
+   {v:["蝴蝶機反向飛鳥"],sets:3,reps:"15"},
+   {v:["二頭彎舉機","繩索二頭彎舉"],sets:3,reps:"12"}]},
+ {n:"腳",s:"腿舉 · 後腿",ex:[
+   {v:["腿舉機","單腳腿舉"],sets:4,reps:"12"},
+   {v:["坐姿腿後勾機"],sets:3,reps:"12-15"},
+   {v:["提踵機"],sets:3,reps:"15"}]},
+ {n:"膊",s:"側膊專項 · 核心",ex:[
+   {v:["坐姿側平舉機","繩索單手側平舉"],sets:4,reps:"15-20"},
+   {v:["坐姿肩推機"],sets:3,reps:"10-12"},
+   {v:["蝴蝶機反向飛鳥"],sets:3,reps:"15"},
+   {v:["器械舉腿","訓地舉腿"],sets:3,reps:"12"}]},
+ {n:"拉",s:"背厚度 · 開肩",ex:[
+   {v:["反手高位下拉"],sets:3,reps:"12"},
+   {v:["坐姿划船機（闊握）","坐姿划船機"],sets:3,reps:"12"},
+   {v:["繩索面拉 Face Pull"],sets:3,reps:"15"},
+   {v:["二頭彎舉機"],sets:3,reps:"12"}]},
+ {n:"腳 + 補",s:"腿 · 胸 · 側膊",ex:[
+   {v:["單腳腿舉","腿舉機"],sets:3,reps:"10"},
+   {v:["腿屈伸機"],sets:3,reps:"15"},
+   {v:["蝴蝶機夾胸","坐姿上斜推胸機"],sets:3,reps:"12"},
+   {v:["坐姿側平舉機"],sets:3,reps:"15"}]}
+];
+
+const KEY="gymroll.v1", REST=90;
+let S=load(), view="home", draft=null, rest=0, restLbl="休息中", mode="full", tick=null, open={};
+
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
+  return {cursor:0,cycle:0,last:{},sessions:[]};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function nameOf(ex){return ex.v[S.cycle % ex.v.length];}
+function esc(t){return String(t).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
+function dstr(){const d=new Date();return (d.getMonth()+1)+"月"+d.getDate()+"日";}
+
+function plan(idx,m){
+  const u=UNITS[idx], list=(m==="short")?u.ex.slice(0,2):u.ex;
+  return list.map(ex=>{
+    const nm=nameOf(ex), prev=S.last[nm]||[], n=(m==="short")?Math.max(2,ex.sets-1):ex.sets;
+    return {name:nm,target:n+" 組 × "+ex.reps,prev,
+      sets:Array.from({length:n},(_,i)=>({w:prev[i]?.w ?? prev[prev.length-1]?.w ?? "",r:prev[i]?.r ?? "",done:false}))};
+  });
+}
+function start(idx){draft={idx,mode,entries:plan(idx,mode)};open={};view="session";stopTimer();render();}
+function finish(){
+  const logged=draft.entries.map(e=>({name:e.name,sets:e.sets.filter(s=>s.done&&s.w!==""&&s.r!=="")})).filter(e=>e.sets.length);
+  logged.forEach(e=>{S.last[e.name]=e.sets.map(s=>({w:s.w,r:s.r}));});
+  S.cursor=(draft.idx+1)%UNITS.length;
+  if(S.cursor===0)S.cycle++;
+  S.sessions.unshift({date:dstr(),unit:UNITS[draft.idx].n,mode:draft.mode,entries:logged});
+  S.sessions=S.sessions.slice(0,60);
+  save();draft=null;stopTimer();view="home";render();
+}
+function stopTimer(){clearInterval(tick);rest=0;}
+function startTimer(sec,lbl){
+  rest=sec;restLbl=lbl;clearInterval(tick);
+  tick=setInterval(()=>{rest--;if(rest<=0){clearInterval(tick);rest=0;}paintRest();},1000);
+  paintRest();
+}
+function paintRest(){
+  const el=document.getElementById("restbar");if(!el)return;
+  if(rest<=0){el.style.display="none";return;}
+  el.style.display="flex";
+  el.querySelector("b").textContent=Math.floor(rest/60)+":"+String(rest%60).padStart(2,"0");
+  el.querySelector("span").textContent=restLbl;
+}
+
+/* ---------- 畫面 ---------- */
+function render(){
+  const a=document.getElementById("app");
+  a.innerHTML = view==="session"?session() : view==="history"?histView() : home();
+  bind(); if(view==="session")paintRest();
+}
+
+function home(){
+  const u=UNITS[S.cursor];
+  const list=((mode==="short")?u.ex.slice(0,2):u.ex).map(ex=>{
+    const n=(mode==="short")?Math.max(2,ex.sets-1):ex.sets;
+    return `<li><span>${esc(nameOf(ex))}</span><span class="target">${n}×${ex.reps}</span></li>`;}).join("");
+  return `
+  <p class="eyebrow">第 ${S.cycle+1} 個循環</p>
+  <h1>下一個係 ${esc(u.n)}</h1>
+  <p class="sub">${esc(u.s)}</p>
+  <div class="mode">
+    <button data-mode="full" class="${mode==="full"?"on":""}">標準 · 約 30 分鐘</button>
+    <button data-mode="short" class="${mode==="short"?"on":""}">短版 · 約 15 分鐘</button>
+  </div>
+  <ul class="preview">${list}</ul>
+  <button class="primary" data-start="${S.cursor}">開始</button>
+  <button class="ghost" data-shortcut="1" style="margin-top:10px">⌚︎ 開 Apple Watch Workout</button>
+  <p class="note-sm">短版係一節完整訓練，唔係打折。時間唔夠或者唔想郁就揀短版，一樣入記錄，一樣推進循環。</p>
+  <p class="sec">跳去其他單元</p>
+  <div class="grid">${UNITS.map((x,i)=>`<button class="chip ${i===S.cursor?"on":""}" data-start="${i}"><b>${esc(x.n)}</b><span>${esc(x.s)}</span></button>`).join("")}</div>
+  <button class="ghost" data-view="history">睇記錄（${S.sessions.length}）</button>`;
+}
+
+function session(){
+  const u=UNITS[draft.idx];
+  const done=draft.entries.reduce((a,e)=>a+e.sets.filter(s=>s.done).length,0);
+  const body=draft.entries.map((e,i)=>{
+    const c=C[e.name];
+    return `<div class="ex">
+      <div class="exhead"><h2>${esc(e.name)}</h2><span class="target">${e.target}</span></div>
+      ${e.prev.length?`<p class="prev">上次：${e.prev.map(p=>esc(p.w)+"×"+esc(p.r)).join("　")}</p>`:""}
+      ${c?`<button class="howbtn" data-how="${i}">${open[i]?"收起":"點樣做 ▾"}</button>`:""}
+      ${c&&open[i]?`<div class="coach">
+        <p><b>設定</b>　${esc(c.s)}</p>
+        <p><b>動作</b>　${esc(c.d)}</p>
+        <p><b>呼吸</b>　${esc(c.b)}</p></div>`:""}
+      <div class="rowhead"><span class="idx">組</span><span class="cell">重量 kg</span><span class="cell">次數</span><span style="width:52px;flex:0 0 52px"></span></div>
+      ${e.sets.map((s,j)=>`<div class="row" style="opacity:${s.done?.55:1}">
+        <span class="idx">${j+1}</span>
+        <span class="cell"><input inputmode="decimal" value="${esc(s.w)}" placeholder="${esc(e.prev[j]?.w ?? "—")}" data-f="w" data-i="${i}" data-j="${j}"></span>
+        <span class="cell"><input inputmode="numeric" value="${esc(s.r)}" placeholder="${esc(e.prev[j]?.r ?? "—")}" data-f="r" data-i="${i}" data-j="${j}"></span>
+        <button class="tick ${s.done?"on":""}" data-tick="${i},${j}">✓</button></div>`).join("")}
+    </div>`;}).join("");
+  const sts=ST[draft.idx].slice(0,draft.mode==="short"?2:3);
+  const stretch=`<div class="stblock"><p class="sec">收工拉筋</p>
+    ${sts.map((x,k)=>`<div class="st"><div><b>${esc(x.n)}</b><p>${esc(x.h)}</p></div>
+      <button data-st="${k}">${x.t} 秒</button></div>`).join("")}</div>`;
+  return `
+  <div class="top"><button class="back" data-view="home">← 返回</button><span class="mute">${done} 組完成</span></div>
+  <h1>${esc(u.n)}</h1><p class="sub">${esc(u.s)}${draft.mode==="short"?" · 短版":""}</p>
+  ${body}${stretch}
+  <button class="primary" data-finish="1">收工，儲存記錄</button>
+  <div style="height:100px"></div>
+  <div class="rest" id="restbar" style="display:none"><b>1:30</b><span>休息中</span><button data-skiprest="1">跳過</button></div>`;
+}
+
+function histView(){
+  if(!S.sessions.length)return `<button class="back" data-view="home">← 返回</button><h1>記錄</h1><p class="mute">仲未有記錄。做完第一組就會出現喺呢度。</p>`;
+  return `<button class="back" data-view="home">← 返回</button><h1>記錄</h1>`+
+   S.sessions.map(s=>`<div class="hist">
+     <div class="exhead"><h2>${esc(s.unit)} ${s.mode==="short"?'<span class="tag">短版</span>':""}</h2><span class="target">${esc(s.date)}</span></div>
+     ${s.entries.map(e=>`<p class="hline"><span>${esc(e.name)}</span><span>${e.sets.map(x=>esc(x.w)+"×"+esc(x.r)).join("　")}</span></p>`).join("")}
+   </div>`).join("");
+}
+
+function bind(){
+  document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;render();});
+  document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>start(+b.dataset.start));
+  document.querySelectorAll("[data-shortcut]").forEach(b=>b.onclick=()=>{location.href="shortcuts://run-shortcut?name=GYM";});
+  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
+    if(b.dataset.view==="home"){draft=null;stopTimer();}
+    view=b.dataset.view;render();});
+  document.querySelectorAll("[data-finish]").forEach(b=>b.onclick=()=>finish());
+  document.querySelectorAll("[data-skiprest]").forEach(b=>b.onclick=()=>{stopTimer();paintRest();});
+  document.querySelectorAll("[data-how]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.how; open[i]=!open[i]; render();});
+  document.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>{
+    const x=ST[draft.idx][+b.dataset.st]; startTimer(x.t, x.n);});
+  document.querySelectorAll("[data-tick]").forEach(b=>b.onclick=()=>{
+    const p=b.dataset.tick.split(",").map(Number), s=draft.entries[p[0]].sets[p[1]];
+    s.done=!s.done; b.classList.toggle("on",s.done);
+    b.closest(".row").style.opacity=s.done?.55:1;
+    const c=document.querySelector(".top .mute");
+    if(c)c.textContent=draft.entries.reduce((a,e)=>a+e.sets.filter(x=>x.done).length,0)+" 組完成";
+    if(s.done&&s.w!==""&&s.r!=="")startTimer(REST,"休息中");});
+  document.querySelectorAll("input[data-f]").forEach(inp=>inp.oninput=()=>{
+    draft.entries[+inp.dataset.i].sets[+inp.dataset.j][inp.dataset.f]=inp.value;});
+}
+render();
+</script>
+</body>
+</html>
