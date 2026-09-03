@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="練">
+<meta name="theme-color" content="#101216">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23101216'/%3E%3Ctext x='90' y='122' font-size='96' font-family='-apple-system,sans-serif' font-weight='700' fill='%235B8CFF' text-anchor='middle'%3E練%3C/text%3E%3C/svg%3E">
+<title>練</title>
+<style>
+:root{
+  --bg:#101216; --panel:#181B21; --line:#262A33;
+  --text:#EBEDF0; --mute:#868D9A; --accent:#5B8CFF; --ok:#3FA96B;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Noto Sans HK",sans-serif;
+  -webkit-font-smoothing:antialiased}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+#app{max-width:520px; margin:0 auto; padding:20px 18px 40px}
+h1{font-size:34px; font-weight:700; letter-spacing:-.02em; margin:0 0 4px}
+h2{font-size:19px; font-weight:600; margin:0}
+p{margin:0}
+button{font-family:inherit; cursor:pointer}
+.eyebrow{color:var(--mute); font-size:14px; margin-bottom:6px}
+.sub{color:var(--mute); font-size:15px; margin-bottom:22px}
+.mute{color:var(--mute); font-size:14px}
+
+.mode{display:flex; gap:8px; margin-bottom:20px}
+.mode button{flex:1; background:var(--panel); border:1px solid var(--line); color:var(--mute);
+  border-radius:11px; padding:12px 0; font-size:15px}
+.mode button.on{border-color:var(--accent); color:var(--text); font-weight:600}
+
+ul.preview{list-style:none; padding:0; margin:0 0 22px; border-top:1px solid var(--line)}
+ul.preview li{display:flex; justify-content:space-between; align-items:baseline;
+  padding:13px 0; border-bottom:1px solid var(--line); font-size:16px; gap:12px}
+.target{color:var(--mute); font-size:14px; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+.primary{width:100%; background:var(--accent); color:#0B0E14; border:none; border-radius:12px;
+  padding:17px 0; font-size:17px; font-weight:700}
+.ghost{width:100%; background:none; color:var(--mute); border:1px solid var(--line);
+  border-radius:12px; padding:14px 0; font-size:15px; margin-top:20px}
+.back{background:none; border:none; color:var(--mute); font-size:15px; padding:0; margin-bottom:14px}
+.note-sm{color:var(--mute); font-size:13.5px; line-height:1.65; margin:14px 0 30px}
+.sec{font-size:15px; font-weight:600; color:var(--mute); margin:0 0 12px}
+
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.chip{text-align:left; background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  padding:13px 14px; display:flex; flex-direction:column; gap:3px}
+.chip.on{border-color:var(--accent)}
+.chip b{font-size:16px; font-weight:600; color:var(--text)}
+.chip span{color:var(--mute); font-size:12.5px}
+
+.top{display:flex; justify-content:space-between; align-items:center}
+.ex{margin-bottom:30px}
+.exhead{display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:4px}
+.hint{color:var(--mute); font-size:13.5px; margin-bottom:4px}
+.prev{color:var(--mute); font-size:13px; margin-bottom:10px; font-variant-numeric:tabular-nums}
+.row{display:flex; gap:8px; align-items:center; margin-bottom:8px}
+.rowhead{display:flex; gap:8px; align-items:center; color:var(--mute); font-size:12px; padding-bottom:6px}
+.idx{width:22px; text-align:center; color:var(--mute); font-size:14px; flex:0 0 22px}
+.cell{flex:1; min-width:0}
+input{width:100%; background:var(--panel); border:1px solid var(--line); color:var(--text);
+  border-radius:10px; padding:13px 8px; font-size:17px; text-align:center; outline:none;
+  font-variant-numeric:tabular-nums; font-family:inherit}
+input:focus{border-color:var(--accent)}
+.tick{width:52px; height:47px; flex:0 0 52px; background:var(--panel); border:1px solid var(--line);
+  color:var(--mute); border-radius:10px; font-size:18px}
+.tick.on{background:var(--ok); border-color:var(--ok); color:#08130C}
+
+.rest{position:fixed; left:0; right:0; bottom:0; background:var(--panel); border-top:1px solid var(--line);
+  display:flex; align-items:center; gap:12px; padding:16px 22px calc(16px + env(safe-area-inset-bottom));
+  max-width:520px; margin:0 auto}
+.rest b{font-size:26px; font-variant-numeric:tabular-nums}
+.rest span{color:var(--mute); font-size:14px; flex:1}
+.rest button{background:none; border:1px solid var(--line); color:var(--text); border-radius:9px;
+  padding:9px 16px; font-size:14px}
+
+.hist{margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid var(--line)}
+.hline{display:flex; justify-content:space-between; gap:12px; margin:7px 0; font-size:14px}
+.hline span:last-child{color:var(--mute); font-variant-numeric:tabular-nums; text-align:right}
+.tag{font-size:12px; color:var(--mute); border:1px solid var(--line); border-radius:6px; padding:2px 6px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ---------- 訓練單元 ---------- */
+const UNITS = [
+ {n:"推", s:"上胸 · 側膊 · 三頭", ex:[
+   {v:["坐姿上斜推胸機","坐姿平推胸機"], sets:4, reps:"10-12", note:"推到頂唔好鎖死手肘"},
+   {v:["蝴蝶機夾胸","高位繩索夾胸"], sets:3, reps:"12-15", note:"夾埋停一秒"},
+   {v:["坐姿側平舉機","繩索單手側平舉"], sets:4, reps:"15", note:"唔好加重，求酸"},
+   {v:["繩索三頭下壓","三頭伸展機"], sets:3, reps:"12"}]},
+ {n:"拉", s:"闊背 · 後膊 · 二頭", ex:[
+   {v:["對握高位下拉","輔助引體上升"], sets:4, reps:"10", note:"掌心相對，護鎖骨"},
+   {v:["坐姿划船機","坐姿划船機（闊握）"], sets:3, reps:"12", note:"挺胸拉，唔好縮膊"},
+   {v:["蝴蝶機反向飛鳥"], sets:3, reps:"15"},
+   {v:["二頭彎舉機","繩索二頭彎舉"], sets:3, reps:"12"}]},
+ {n:"腳", s:"腿舉 · 後腿", ex:[
+   {v:["腿舉機","單腳腿舉"], sets:4, reps:"12", note:"膝頭微彎唔鎖死"},
+   {v:["坐姿腿後勾機"], sets:3, reps:"12-15"},
+   {v:["提踵機"], sets:3, reps:"15"}]},
+ {n:"膊", s:"側膊專項 · 核心", ex:[
+   {v:["坐姿側平舉機","繩索單手側平舉"], sets:4, reps:"15-20", note:"今日重點，做慢啲求充血"},
+   {v:["坐姿肩推機"], sets:3, reps:"10-12"},
+   {v:["蝴蝶機反向飛鳥"], sets:3, reps:"15"},
+   {v:["器械舉腿","訓地舉腿"], sets:3, reps:"12"}]},
+ {n:"拉", s:"背厚度 · 開肩", ex:[
+   {v:["反手高位下拉"], sets:3, reps:"12", note:"反手握，增厚背闊肌"},
+   {v:["坐姿划船機（闊握）","坐姿划船機"], sets:3, reps:"12"},
+   {v:["繩索面拉 Face Pull"], sets:3, reps:"15", note:"拉到耳仔位置"},
+   {v:["二頭彎舉機"], sets:3, reps:"12"}]},
+ {n:"腳 + 補", s:"腿 · 胸 · 側膊", ex:[
+   {v:["單腳腿舉","腿舉機"], sets:3, reps:"10", note:"每邊"},
+   {v:["腿屈伸機"], sets:3, reps:"15", note:"踢直停一秒"},
+   {v:["蝴蝶機夾胸","坐姿上斜推胸機"], sets:3, reps:"12"},
+   {v:["坐姿側平舉機"], sets:3, reps:"15"}]}
+];
+
+const KEY="gymroll.v1", REST=90;
+let S = load(), view="home", draft=null, rest=0, mode="full", tick=null;
+
+function load(){
+  try{ const r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
+  return {cursor:0, cycle:0, last:{}, sessions:[]};
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function nameOf(ex){ return ex.v[S.cycle % ex.v.length]; }
+function esc(t){ return String(t).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+function dstr(){ const d=new Date(); return (d.getMonth()+1)+"月"+d.getDate()+"日"; }
+
+/* 短版：頭兩個動作，每個減一組。照樣算完整一節。 */
+function plan(idx, m){
+  const u=UNITS[idx];
+  const list = m==="short" ? u.ex.slice(0,2) : u.ex;
+  return list.map(ex=>{
+    const nm=nameOf(ex), prev=S.last[nm]||[], n = m==="short" ? Math.max(2, ex.sets-1) : ex.sets;
+    return {name:nm, note:ex.note, target:n+" 組 × "+ex.reps, prev,
+      sets:Array.from({length:n},(_,i)=>({w:prev[i]?.w ?? prev[prev.length-1]?.w ?? "",
+        r:prev[i]?.r ?? "", done:false}))};
+  });
+}
+
+function start(idx){
+  draft={idx, mode, entries:plan(idx, mode)};
+  view="session"; rest=0; render();
+}
+
+function finish(){
+  const logged = draft.entries.map(e=>({name:e.name,
+      sets:e.sets.filter(s=>s.done && s.w!=="" && s.r!=="")})).filter(e=>e.sets.length);
+  logged.forEach(e=>{ S.last[e.name]=e.sets.map(s=>({w:s.w,r:s.r})); });
+  S.cursor=(draft.idx+1)%UNITS.length;
+  if(S.cursor===0) S.cycle++;
+  S.sessions.unshift({date:dstr(), unit:UNITS[draft.idx].n, mode:draft.mode, entries:logged});
+  S.sessions=S.sessions.slice(0,60);
+  save(); draft=null; rest=0; view="home"; render();
+}
+
+function startRest(){
+  rest=REST; clearInterval(tick);
+  tick=setInterval(()=>{ rest--; if(rest<=0){clearInterval(tick); rest=0;} paintRest(); },1000);
+  paintRest();
+}
+function paintRest(){
+  const el=document.getElementById("restbar"); if(!el) return;
+  if(rest<=0){ el.style.display="none"; return; }
+  el.style.display="flex";
+  el.querySelector("b").textContent = Math.floor(rest/60)+":"+String(rest%60).padStart(2,"0");
+}
+
+/* ---------- 畫面 ---------- */
+function render(){
+  const a=document.getElementById("app");
+  if(view==="session") a.innerHTML=session();
+  else if(view==="history") a.innerHTML=history();
+  else a.innerHTML=home();
+  bind();
+  if(view==="session") paintRest();
+}
+
+function home(){
+  const u=UNITS[S.cursor];
+  const list = (mode==="short"? u.ex.slice(0,2) : u.ex).map(ex=>{
+    const n = mode==="short" ? Math.max(2, ex.sets-1) : ex.sets;
+    return `<li><span>${esc(nameOf(ex))}</span><span class="target">${n}×${ex.reps}</span></li>`;
+  }).join("");
+  return `
+  <p class="eyebrow">第 ${S.cycle+1} 個循環</p>
+  <h1>下一個係 ${esc(u.n)}</h1>
+  <p class="sub">${esc(u.s)}</p>
+  <div class="mode">
+    <button data-mode="full" class="${mode==="full"?"on":""}">標準 · 約 30 分鐘</button>
+    <button data-mode="short" class="${mode==="short"?"on":""}">短版 · 約 15 分鐘</button>
+  </div>
+  <ul class="preview">${list}</ul>
+  <button class="primary" data-start="${S.cursor}">開始</button>
+  <p class="note-sm">短版係一節完整訓練，唔係打折。時間唔夠或者唔想郁就揀短版，一樣入記錄，一樣推進循環。</p>
+  <p class="sec">跳去其他單元</p>
+  <div class="grid">${UNITS.map((x,i)=>
+    `<button class="chip ${i===S.cursor?"on":""}" data-start="${i}"><b>${esc(x.n)}</b><span>${esc(x.s)}</span></button>`
+  ).join("")}</div>
+  <button class="ghost" data-view="history">睇記錄（${S.sessions.length}）</button>`;
+}
+
+function session(){
+  const u=UNITS[draft.idx];
+  const done=draft.entries.reduce((a,e)=>a+e.sets.filter(s=>s.done).length,0);
+  const body=draft.entries.map((e,i)=>`
+    <div class="ex">
+      <div class="exhead"><h2>${esc(e.name)}</h2><span class="target">${e.target}</span></div>
+      ${e.note?`<p class="hint">${esc(e.note)}</p>`:""}
+      ${e.prev.length?`<p class="prev">上次：${e.prev.map(p=>esc(p.w)+"×"+esc(p.r)).join("　")}</p>`:""}
+      <div class="rowhead"><span class="idx">組</span><span class="cell">重量 kg</span><span class="cell">次數</span><span style="width:52px;flex:0 0 52px"></span></div>
+      ${e.sets.map((s,j)=>`
+        <div class="row" style="opacity:${s.done?.55:1}">
+          <span class="idx">${j+1}</span>
+          <span class="cell"><input inputmode="decimal" value="${esc(s.w)}" placeholder="${esc(e.prev[j]?.w ?? "—")}" data-f="w" data-i="${i}" data-j="${j}"></span>
+          <span class="cell"><input inputmode="numeric" value="${esc(s.r)}" placeholder="${esc(e.prev[j]?.r ?? "—")}" data-f="r" data-i="${i}" data-j="${j}"></span>
+          <button class="tick ${s.done?"on":""}" data-tick="${i},${j}">✓</button>
+        </div>`).join("")}
+    </div>`).join("");
+  return `
+  <div class="top"><button class="back" data-view="home">← 返回</button><span class="mute">${done} 組完成</span></div>
+  <h1>${esc(u.n)}</h1><p class="sub">${esc(u.s)}${draft.mode==="short"?" · 短版":""}</p>
+  ${body}
+  <button class="primary" data-finish="1">收工，儲存記錄</button>
+  <div style="height:100px"></div>
+  <div class="rest" id="restbar" style="display:none"><b>1:30</b><span>休息中</span><button data-skiprest="1">跳過</button></div>`;
+}
+
+function history(){
+  if(!S.sessions.length) return `<button class="back" data-view="home">← 返回</button><h1>記錄</h1>
+    <p class="mute">仲未有記錄。做完第一組就會出現喺呢度。</p>`;
+  return `<button class="back" data-view="home">← 返回</button><h1>記錄</h1>` +
+   S.sessions.map(s=>`<div class="hist">
+     <div class="exhead"><h2>${esc(s.unit)} ${s.mode==="short"?'<span class="tag">短版</span>':""}</h2><span class="target">${esc(s.date)}</span></div>
+     ${s.entries.map(e=>`<p class="hline"><span>${esc(e.name)}</span><span>${e.sets.map(x=>esc(x.w)+"×"+esc(x.r)).join("　")}</span></p>`).join("")}
+   </div>`).join("");
+}
+
+function bind(){
+  document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode; render();});
+  document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>start(+b.dataset.start));
+  document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
+    if(b.dataset.view==="home"){draft=null; clearInterval(tick); rest=0;}
+    view=b.dataset.view; render();});
+  document.querySelectorAll("[data-finish]").forEach(b=>b.onclick=()=>{clearInterval(tick); finish();});
+  document.querySelectorAll("[data-skiprest]").forEach(b=>b.onclick=()=>{clearInterval(tick); rest=0; paintRest();});
+  document.querySelectorAll("[data-tick]").forEach(b=>b.onclick=()=>{
+    const [i,j]=b.dataset.tick.split(",").map(Number);
+    const s=draft.entries[i].sets[j]; s.done=!s.done;
+    b.classList.toggle("on", s.done);
+    b.closest(".row").style.opacity = s.done? .55 : 1;
+    const c=document.querySelector(".top .mute");
+    if(c) c.textContent = draft.entries.reduce((a,e)=>a+e.sets.filter(x=>x.done).length,0)+" 組完成";
+    if(s.done && s.w!=="" && s.r!=="") startRest();
+  });
+  document.querySelectorAll("input[data-f]").forEach(inp=>inp.oninput=()=>{
+    draft.entries[+inp.dataset.i].sets[+inp.dataset.j][inp.dataset.f]=inp.value;
+  });
+}
+
+render();
+</script>
+</body>
+</html>
